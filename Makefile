@@ -28,7 +28,7 @@ cover: $(COVER_FILE) ## Output coverage in human readable form in html
 
 .PHONY: lint
 lint: tools ## Check the project with lint
-	golangci-lint
+	golangci-lint run
 
 .PHONY: dependencies
 dependencies: ## Manage go mod dependencies, beautify go.mod and go.sum files
