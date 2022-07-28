@@ -190,3 +190,9 @@ linters-settings:
 
   goimports:
     local-prefixes: github.com/emacsway/qualifying-grade
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gocyclo
