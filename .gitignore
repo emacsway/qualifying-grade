@@ -1,1 +1,7 @@
+.*
+
 /coverage.out
+
+!.github
+!.gitignore
+!.golangci.yml

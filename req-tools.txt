@@ -1,4 +1,1 @@
-github.com/fzipp/gocyclo/cmd/gocyclo@v0.6.0
-golang.org/x/tools/cmd/goimports@v0.1.11
-honnef.co/go/tools/cmd/staticcheck@v0.3.2
-
+github.com/golangci/golangci-lint/cmd/golangci-lint@v1.47.2
