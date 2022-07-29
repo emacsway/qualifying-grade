@@ -2,19 +2,13 @@ package endorsed
 
 import (
 	"errors"
-	gradelogentry2 "github.com/emacsway/qualifying-grade/grade/internal/domain/endorsed/gradelogentry/gradelogentry"
-	interfaces2 "github.com/emacsway/qualifying-grade/grade/internal/domain/endorsed/gradelogentry/interfaces"
-	interfaces3 "github.com/emacsway/qualifying-grade/grade/internal/domain/endorsed/interfaces"
-	"time"
-
 	"github.com/emacsway/qualifying-grade/grade/internal/domain/artifact/artifact"
-	"github.com/emacsway/qualifying-grade/grade/internal/domain/endorsed/endorsement"
-	"github.com/emacsway/qualifying-grade/grade/internal/domain/endorsed/endorsement/interfaces"
-	"github.com/emacsway/qualifying-grade/grade/internal/domain/endorsed/gradelogentry"
+	"github.com/emacsway/qualifying-grade/grade/internal/domain/endorsed/interfaces"
 	"github.com/emacsway/qualifying-grade/grade/internal/domain/member"
 	"github.com/emacsway/qualifying-grade/grade/internal/domain/recognizer"
 	"github.com/emacsway/qualifying-grade/grade/internal/domain/seedwork"
 	"github.com/emacsway/qualifying-grade/grade/internal/domain/shared"
+	"time"
 )
 
 var (
@@ -47,8 +41,8 @@ func NewEndorsed(
 type Endorsed struct {
 	id                   member.TenantMemberId
 	grade                shared.Grade
-	receivedEndorsements []endorsement.Endorsement
-	gradeLogEntries      []gradelogentry.GradeLogEntry
+	receivedEndorsements []Endorsement
+	gradeLogEntries      []GradeLogEntry
 	createdAt            time.Time
 	seedwork.VersionedAggregate
 	seedwork.EventiveEntity
@@ -59,7 +53,7 @@ func (e *Endorsed) ReceiveEndorsement(r recognizer.Recognizer, aId artifact.Arti
 	if err != nil {
 		return err
 	}
-	ent, err := endorsement.NewEndorsement(
+	ent, err := NewEndorsement(
 		r.GetId(), r.GetGrade(), r.GetVersion(),
 		e.id, e.grade, e.GetVersion(),
 		aId, t,
@@ -89,7 +83,7 @@ func (e Endorsed) canBeEndorsed(r recognizer.Recognizer, aId artifact.ArtifactId
 			return ErrAlreadyEndorsed
 		}
 	}
-	return endorsement.CanEndorse(r.GetId(), r.GetGrade(), e.id, e.grade)
+	return CanEndorse(r.GetId(), r.GetGrade(), e.id, e.grade)
 }
 
 func (e Endorsed) CanBeginEndorsement(r recognizer.Recognizer, aId artifact.ArtifactId) error {
@@ -106,7 +100,7 @@ func (e *Endorsed) actualizeGrade(t time.Time) error {
 		if err != nil {
 			return err
 		}
-		reason, err := gradelogentry2.NewReason("Endorsement count is achieved")
+		reason, err := NewReason("Endorsement count is achieved")
 		if err != nil {
 			return err
 		}
@@ -124,8 +118,8 @@ func (e Endorsed) getReceivedEndorsementCount() uint {
 	return counter
 }
 
-func (e *Endorsed) setGrade(g shared.Grade, reason gradelogentry2.Reason, t time.Time) error {
-	gle, err := gradelogentry.NewGradeLogEntry(
+func (e *Endorsed) setGrade(g shared.Grade, reason Reason, t time.Time) error {
+	gle, err := NewGradeLogEntry(
 		e.id, e.GetVersion(), g, reason, t,
 	)
 	if err != nil {
@@ -136,7 +130,7 @@ func (e *Endorsed) setGrade(g shared.Grade, reason gradelogentry2.Reason, t time
 	return nil
 }
 
-func (e *Endorsed) DecreaseGrade(reason gradelogentry2.Reason, t time.Time) error {
+func (e *Endorsed) DecreaseGrade(reason Reason, t time.Time) error {
 	previousGrade, err := e.grade.Next()
 	if err != nil {
 		return err
@@ -144,20 +138,20 @@ func (e *Endorsed) DecreaseGrade(reason gradelogentry2.Reason, t time.Time) erro
 	return e.setGrade(previousGrade, reason, t)
 }
 
-func (e Endorsed) ExportTo(ex interfaces3.EndorsedExporter) {
+func (e Endorsed) ExportTo(ex interfaces.EndorsedExporter) {
 	var id member.TenantMemberIdExporter
 	var grade seedwork.Uint8Exporter
 	var receivedEndorsements []interfaces.EndorsementExporter
-	var gradeLogEntries []interfaces2.GradeLogEntryExporter
+	var gradeLogEntries []interfaces.GradeLogEntryExporter
 
 	for _, v := range e.receivedEndorsements {
-		re := &endorsement.EndorsementExporter{}
+		re := &EndorsementExporter{}
 		v.ExportTo(re)
 		receivedEndorsements = append(receivedEndorsements, re)
 	}
 
 	for _, v := range e.gradeLogEntries {
-		gle := &gradelogentry.GradeLogEntryExporter{}
+		gle := &GradeLogEntryExporter{}
 		v.ExportTo(gle)
 		gradeLogEntries = append(gradeLogEntries, gle)
 	}
@@ -170,8 +164,8 @@ func (e Endorsed) ExportTo(ex interfaces3.EndorsedExporter) {
 }
 
 func (e Endorsed) Export() EndorsedState {
-	var receivedEndorsements []endorsement.EndorsementState
-	var gradeLogEntries []gradelogentry.GradeLogEntryState
+	var receivedEndorsements []EndorsementState
+	var gradeLogEntries []GradeLogEntryState
 	for _, v := range e.receivedEndorsements {
 		receivedEndorsements = append(receivedEndorsements, v.Export())
 	}

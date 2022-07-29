@@ -1,7 +1,6 @@
-package gradelogentry
+package endorsed
 
 import (
-	"github.com/emacsway/qualifying-grade/grade/internal/domain/endorsed/gradelogentry/gradelogentry"
 	"github.com/emacsway/qualifying-grade/grade/internal/domain/member"
 	"time"
 
@@ -40,7 +39,7 @@ func (f GradeLogEntryFakeFactory) Create() (GradeLogEntry, error) {
 	if err != nil {
 		return GradeLogEntry{}, err
 	}
-	reason, err := gradelogentry.NewReason(f.Reason)
+	reason, err := NewReason(f.Reason)
 	if err != nil {
 		return GradeLogEntry{}, err
 	}

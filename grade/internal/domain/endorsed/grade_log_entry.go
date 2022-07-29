@@ -1,20 +1,18 @@
-package gradelogentry
+package endorsed
 
 import (
-	"github.com/emacsway/qualifying-grade/grade/internal/domain/endorsed/gradelogentry/gradelogentry"
+	"github.com/emacsway/qualifying-grade/grade/internal/domain/endorsed/interfaces"
 	"github.com/emacsway/qualifying-grade/grade/internal/domain/member"
-	"time"
-
-	interfaces2 "github.com/emacsway/qualifying-grade/grade/internal/domain/endorsed/gradelogentry/interfaces"
 	"github.com/emacsway/qualifying-grade/grade/internal/domain/seedwork"
 	"github.com/emacsway/qualifying-grade/grade/internal/domain/shared"
+	"time"
 )
 
 func NewGradeLogEntry(
 	endorsedId member.TenantMemberId,
 	endorsedVersion uint,
 	assignedGrade shared.Grade,
-	reason gradelogentry.Reason,
+	reason Reason,
 	createdAt time.Time,
 ) (GradeLogEntry, error) {
 	return GradeLogEntry{
@@ -30,11 +28,11 @@ type GradeLogEntry struct {
 	endorsedId      member.TenantMemberId
 	endorsedVersion uint
 	assignedGrade   shared.Grade
-	reason          gradelogentry.Reason
+	reason          Reason
 	createdAt       time.Time
 }
 
-func (gle GradeLogEntry) ExportTo(ex interfaces2.GradeLogEntryExporter) {
+func (gle GradeLogEntry) ExportTo(ex interfaces.GradeLogEntryExporter) {
 	var endorsedId member.TenantMemberIdExporter
 	var assignedGrade seedwork.Uint8Exporter
 	var reason seedwork.StringExporter

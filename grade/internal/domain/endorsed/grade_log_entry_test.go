@@ -1,4 +1,4 @@
-package gradelogentry
+package endorsed
 
 import (
 	"github.com/emacsway/qualifying-grade/grade/internal/domain/member"

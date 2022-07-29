@@ -1,8 +1,6 @@
 package interfaces
 
 import (
-	interfaces2 "github.com/emacsway/qualifying-grade/grade/internal/domain/endorsed/endorsement/interfaces"
-	interfaces3 "github.com/emacsway/qualifying-grade/grade/internal/domain/endorsed/gradelogentry/interfaces"
 	interfaces4 "github.com/emacsway/qualifying-grade/grade/internal/domain/member/interfaces"
 	"github.com/emacsway/qualifying-grade/grade/internal/domain/seedwork/interfaces"
 	"time"
@@ -12,9 +10,32 @@ type EndorsedExporter interface {
 	SetState(
 		id interfaces4.TenantMemberIdExporter,
 		grade interfaces.Exporter[uint8],
-		receivedEndorsements []interfaces2.EndorsementExporter,
-		gradeLogEntries []interfaces3.GradeLogEntryExporter,
+		receivedEndorsements []EndorsementExporter,
+		gradeLogEntries []GradeLogEntryExporter,
 		version uint,
+		createdAt time.Time,
+	)
+}
+
+type GradeLogEntryExporter interface {
+	SetState(
+		endorsedId interfaces4.TenantMemberIdExporter,
+		endorsedVersion uint,
+		assignedGrade interfaces.Exporter[uint8],
+		reason interfaces.Exporter[string],
+		createdAt time.Time,
+	)
+}
+
+type EndorsementExporter interface {
+	SetState(
+		recognizerId interfaces4.TenantMemberIdExporter,
+		recognizerGrade interfaces.Exporter[uint8],
+		recognizerVersion uint,
+		endorsedId interfaces4.TenantMemberIdExporter,
+		endorsedGrade interfaces.Exporter[uint8],
+		endorsedVersion uint,
+		artifactId interfaces.Exporter[uint64],
 		createdAt time.Time,
 	)
 }

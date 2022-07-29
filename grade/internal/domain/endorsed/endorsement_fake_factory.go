@@ -1,11 +1,10 @@
-package endorsement
+package endorsed
 
 import (
-	"github.com/emacsway/qualifying-grade/grade/internal/domain/member"
-	"time"
-
 	"github.com/emacsway/qualifying-grade/grade/internal/domain/artifact/artifact"
+	"github.com/emacsway/qualifying-grade/grade/internal/domain/member"
 	"github.com/emacsway/qualifying-grade/grade/internal/domain/shared"
+	"time"
 )
 
 func NewEndorsementFakeFactory() (*EndorsementFakeFactory, error) {

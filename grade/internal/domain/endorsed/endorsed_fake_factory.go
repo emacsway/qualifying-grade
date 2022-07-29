@@ -26,7 +26,7 @@ func NewEndorsedFakeFactory() (*EndorsedFakeFactory, error) {
 type EndorsedFakeFactory struct {
 	Id                   *member.TenantMemberIdFakeFactory
 	Grade                uint8
-	ReceivedEndorsements []*EndorsementFakeFactory
+	ReceivedEndorsements []*EndorsementFakeFactory2
 	CreatedAt            time.Time
 	CurrentArtifactId    uint64
 }
@@ -52,7 +52,10 @@ func (f *EndorsedFakeFactory) achieveGrade() error {
 		r.Grade = recognizerGrade.Export()
 		var endorsementCount uint = 0
 		for !currentGrade.NextGradeAchieved(endorsementCount) {
-			f.receiveEndorsement(r)
+			err = f.receiveEndorsement(r)
+			if err != nil {
+				return err
+			}
 			endorsementCount += 2
 		}
 		currentGrade, err = currentGrade.Next()
@@ -68,16 +71,23 @@ func (f *EndorsedFakeFactory) ReceiveEndorsement(r *recognizer.RecognizerFakeFac
 	if err != nil {
 		return err
 	}
-	f.receiveEndorsement(r)
+	err = f.receiveEndorsement(r)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
-func (f *EndorsedFakeFactory) receiveEndorsement(r *recognizer.RecognizerFakeFactory) {
-	e := NewEndorsementFakeFactory(r)
+func (f *EndorsedFakeFactory) receiveEndorsement(r *recognizer.RecognizerFakeFactory) error {
+	e, err := NewEndorsementFakeFactory2(r)
+	if err != nil {
+		return err
+	}
 	e.ArtifactId = f.CurrentArtifactId
 	f.CurrentArtifactId += 1
 	e.CreatedAt = time.Now()
 	f.ReceivedEndorsements = append(f.ReceivedEndorsements, e)
+	return nil
 }
 
 func (f EndorsedFakeFactory) Create() (*Endorsed, error) {
@@ -115,15 +125,15 @@ func (f EndorsedFakeFactory) Create() (*Endorsed, error) {
 	return e, nil
 }
 
-func NewEndorsementFakeFactory(r *recognizer.RecognizerFakeFactory) *EndorsementFakeFactory {
-	return &EndorsementFakeFactory{
+func NewEndorsementFakeFactory2(r *recognizer.RecognizerFakeFactory) (*EndorsementFakeFactory2, error) {
+	return &EndorsementFakeFactory2{
 		Recognizer: r,
 		ArtifactId: 6,
 		CreatedAt:  time.Now(),
-	}
+	}, nil
 }
 
-type EndorsementFakeFactory struct {
+type EndorsementFakeFactory2 struct {
 	Recognizer *recognizer.RecognizerFakeFactory
 	ArtifactId uint64
 	CreatedAt  time.Time

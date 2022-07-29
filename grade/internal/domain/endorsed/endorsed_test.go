@@ -1,10 +1,7 @@
 package endorsed
 
 import (
-	"github.com/emacsway/qualifying-grade/grade/internal/domain/endorsed/endorsement"
-	interfaces2 "github.com/emacsway/qualifying-grade/grade/internal/domain/endorsed/endorsement/interfaces"
-	"github.com/emacsway/qualifying-grade/grade/internal/domain/endorsed/gradelogentry"
-	"github.com/emacsway/qualifying-grade/grade/internal/domain/endorsed/gradelogentry/interfaces"
+	"github.com/emacsway/qualifying-grade/grade/internal/domain/endorsed/interfaces"
 	"github.com/emacsway/qualifying-grade/grade/internal/domain/member"
 	"github.com/emacsway/qualifying-grade/grade/internal/domain/seedwork"
 	"testing"
@@ -42,7 +39,7 @@ func TestEndorsedExport(t *testing.T) {
 			MemberId: ef.Id.MemberId,
 		},
 		Grade: ef.Grade + 1,
-		ReceivedEndorsements: []endorsement.EndorsementState{
+		ReceivedEndorsements: []EndorsementState{
 			{
 				RecognizerId: member.TenantMemberIdState{
 					TenantId: rf.Id.TenantId,
@@ -108,7 +105,7 @@ func TestEndorsedExport(t *testing.T) {
 				CreatedAt:       ef.ReceivedEndorsements[3].CreatedAt,
 			},
 		},
-		GradeLogEntries: []gradelogentry.GradeLogEntryState{
+		GradeLogEntries: []GradeLogEntryState{
 			{
 				EndorsedId: member.TenantMemberIdState{
 					TenantId: ef.Id.TenantId,
@@ -153,8 +150,8 @@ func TestEndorsedExportTo(t *testing.T) {
 	assert.Equal(t, EndorsedExporter{
 		Id:    member.NewTenantMemberIdExporter(ef.Id.TenantId, ef.Id.MemberId),
 		Grade: seedwork.NewUint8Exporter(ef.Grade + 1),
-		ReceivedEndorsements: []interfaces2.EndorsementExporter{
-			&endorsement.EndorsementExporter{
+		ReceivedEndorsements: []interfaces.EndorsementExporter{
+			&EndorsementExporter{
 				RecognizerId:      member.NewTenantMemberIdExporter(rf.Id.TenantId, rf.Id.MemberId),
 				RecognizerGrade:   seedwork.NewUint8Exporter(rf.Grade),
 				RecognizerVersion: 0,
@@ -164,7 +161,7 @@ func TestEndorsedExportTo(t *testing.T) {
 				ArtifactId:        seedwork.NewUint64Exporter(ef.ReceivedEndorsements[0].ArtifactId),
 				CreatedAt:         ef.ReceivedEndorsements[0].CreatedAt,
 			},
-			&endorsement.EndorsementExporter{
+			&EndorsementExporter{
 				RecognizerId:      member.NewTenantMemberIdExporter(rf.Id.TenantId, rf.Id.MemberId),
 				RecognizerGrade:   seedwork.NewUint8Exporter(rf.Grade),
 				RecognizerVersion: 0,
@@ -174,7 +171,7 @@ func TestEndorsedExportTo(t *testing.T) {
 				ArtifactId:        seedwork.NewUint64Exporter(ef.ReceivedEndorsements[1].ArtifactId),
 				CreatedAt:         ef.ReceivedEndorsements[1].CreatedAt,
 			},
-			&endorsement.EndorsementExporter{
+			&EndorsementExporter{
 				RecognizerId:      member.NewTenantMemberIdExporter(rf.Id.TenantId, rf.Id.MemberId),
 				RecognizerGrade:   seedwork.NewUint8Exporter(rf.Grade),
 				RecognizerVersion: 0,
@@ -184,7 +181,7 @@ func TestEndorsedExportTo(t *testing.T) {
 				ArtifactId:        seedwork.NewUint64Exporter(ef.ReceivedEndorsements[2].ArtifactId),
 				CreatedAt:         ef.ReceivedEndorsements[2].CreatedAt,
 			},
-			&endorsement.EndorsementExporter{
+			&EndorsementExporter{
 				RecognizerId:      member.NewTenantMemberIdExporter(rf.Id.TenantId, rf.Id.MemberId),
 				RecognizerGrade:   seedwork.NewUint8Exporter(rf.Grade),
 				RecognizerVersion: 0,
@@ -196,7 +193,7 @@ func TestEndorsedExportTo(t *testing.T) {
 			},
 		},
 		GradeLogEntries: []interfaces.GradeLogEntryExporter{
-			&gradelogentry.GradeLogEntryExporter{
+			&GradeLogEntryExporter{
 				EndorsedId:      member.NewTenantMemberIdExporter(ef.Id.TenantId, ef.Id.MemberId),
 				EndorsedVersion: 2,
 				AssignedGrade:   seedwork.NewUint8Exporter(ef.Grade + 1),

@@ -1,4 +1,4 @@
-package endorsement
+package endorsed
 
 import (
 	"fmt"
@@ -135,7 +135,7 @@ func TestEndorsementExport(t *testing.T) {
 	}, e.Export())
 }
 
-func TestRecognizerExportTo(t *testing.T) {
+func TestEndorsementExportTo(t *testing.T) {
 	var actualExporter EndorsementExporter
 	f, err := NewEndorsementFakeFactory()
 	if err != nil {

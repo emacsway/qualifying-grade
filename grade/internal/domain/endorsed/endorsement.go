@@ -1,13 +1,13 @@
-package endorsement
+package endorsed
 
 import (
 	"errors"
+	"github.com/emacsway/qualifying-grade/grade/internal/domain/endorsed/interfaces"
 	"github.com/emacsway/qualifying-grade/grade/internal/domain/member"
 	"github.com/hashicorp/go-multierror"
 	"time"
 
 	"github.com/emacsway/qualifying-grade/grade/internal/domain/artifact/artifact"
-	"github.com/emacsway/qualifying-grade/grade/internal/domain/endorsed/endorsement/interfaces"
 	"github.com/emacsway/qualifying-grade/grade/internal/domain/seedwork"
 	"github.com/emacsway/qualifying-grade/grade/internal/domain/shared"
 )
